@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Каталог — Аромат Востока</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+      <div class="search-overlay__inner">
+        <button class="search-overlay__close" id="searchClose">✕</button>
+        <input
+          type="text"
+          class="search-overlay__input"
+          id="searchInput"
+          placeholder="Поиск по товарам... (например, шафран, кардамон)"
+          autocomplete="off"
+        />
+        <div class="search-overlay__results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- Callback Modal -->
+    <div class="modal-overlay" id="callbackModal">
+      <div class="modal">
+        <button class="modal__close">✕</button>
+        <h3 class="modal__title">Заказать звонок</h3>
+        <p class="modal__text">Оставьте контакты — мы перезвоним в течение 15 минут</p>
+        <form id="callback-form" action="/api/callback" method="POST">
+          <div class="form-group">
+            <label for="callback-name">Ваше имя *</label>
+            <input type="text" id="callback-name" name="name" placeholder="Иван Иванов" required />
+            <span class="form-error">Введите имя</span>
+          </div>
+          <div class="form-group">
+            <label for="callback-phone">Телефон *</label>
+            <input type="tel" id="callback-phone" name="phone" placeholder="+7 (999) 123-45-67" required />
+            <span class="form-error">Введите телефон</span>
+          </div>
+          <div class="form-group">
+            <label for="callback-message">Сообщение</label>
+            <textarea id="callback-message" name="message" placeholder="Что вас интересует?"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block form__submit">Отправить</button>
+          <p class="form__note">Нажимая кнопку, вы соглашаетесь с <a href="#">политикой конфиденциальности</a></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header__inner">
+        <a href="index.html" class="logo">
+          <div class="logo__icon">☥</div>
+          Аромат Востока
+        </a>
+
+        <nav class="nav">
+          <a href="catalog.html" class="nav__link active">Каталог</a>
+          <a href="index.html#products" class="nav__link">Новинки</a>
+          <a href="index.html#about" class="nav__link">О нас</a>
+          <a href="index.html#testimonials" class="nav__link">Отзывы</a>
+          <a href="index.html#contacts" class="nav__link">Контакты</a>
+        </nav>
+
+        <div class="header__actions">
+          <button class="icon-btn" id="searchBtn" aria-label="Поиск">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" aria-label="Избранное">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+            </svg>
+          </button>
+          <a href="cart.html" class="icon-btn" aria-label="Корзина">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"></circle>
+              <circle cx="19" cy="21" r="1"></circle>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+            </svg>
+            <span class="icon-btn__badge cart-badge">3</span>
+          </a>
+          <button class="mobile-menu-btn" id="menuBtn" aria-label="Меню">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="mobile-menu__close" id="menuClose">✕</button>
+      <nav class="mobile-menu__nav">
+        <a href="catalog.html">Каталог</a>
+        <a href="index.html#products">Новинки</a>
+        <a href="index.html#about">О нас</a>
+        <a href="index.html#testimonials">Отзывы</a>
+        <a href="index.html#contacts">Контакты</a>
+      </nav>
+    </div>
+
+    <!-- Mobile Filter Overlay -->
+    <div class="overlay" id="filterOverlay"></div>
+    <div class="filter-drawer" id="filterDrawer">
+      <div class="filter-drawer__header">
+        <h3 class="filter-drawer__title">Фильтры</h3>
+        <button class="filter-drawer__close" id="filterClose">✕</button>
+      </div>
+      <div class="filter-sidebar__content">
+        <div class="filter-group">
+          <h4 class="filter-group__title">Категории</h4>
+          <ul class="filter-list">
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="whole" checked /> Цельные специи <span class="filter-count">48</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="ground" checked /> Молотые специи <span class="filter-count">62</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="mixes" checked /> Смеси и масалы <span class="filter-count">35</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="tea" checked /> Пряные чаи <span class="filter-count">24</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="accessories" /> Аксессуары <span class="filter-count">12</span></label></li>
+          </ul>
+        </div>
+        <div class="filter-group">
+          <h4 class="filter-group__title">Цена</h4>
+          <div class="price-range">
+            <input type="number" name="price_from" placeholder="от" value="100" />
+            <span class="price-range__sep">—</span>
+            <input type="number" name="price_to" placeholder="до" value="5000" />
+          </div>
+        </div>
+        <div class="filter-group">
+          <h4 class="filter-group__title">Страна</h4>
+          <ul class="filter-list">
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="india" checked /> Индия <span class="filter-count">45</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="srilanka" checked /> Шри-Ланка <span class="filter-count">23</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="morocco" /> Марокко <span class="filter-count">18</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="thailand" /> Таиланд <span class="filter-count">15</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="iran" /> Иран <span class="filter-count">8</span></label></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs" style="margin-top: 72px;">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__sep">/</span>
+      <span class="breadcrumbs__current">Каталог</span>
+    </nav>
+
+    <!-- Catalog Hero -->
+    <section class="catalog-hero">
+      <h1 class="catalog-hero__title">Каталог специй</h1>
+      <p class="catalog-hero__text">169 товаров премиум-класса из лучших уголков мира</p>
+    </section>
+
+    <!-- Catalog Main -->
+    <div class="catalog-main">
+      <!-- Sidebar Filters -->
+      <aside class="filter-sidebar scroll-reveal">
+        <h3 class="filter-sidebar__title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 0.5rem;">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          Фильтры
+        </h3>
+
+        <div class="filter-group">
+          <h4 class="filter-group__title">Категории</h4>
+          <ul class="filter-list">
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="whole" checked /> Цельные специи <span class="filter-count">48</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="ground" checked /> Молотые специи <span class="filter-count">62</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="mixes" checked /> Смеси и масалы <span class="filter-count">35</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="tea" checked /> Пряные чаи <span class="filter-count">24</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="category" value="accessories" /> Аксессуары <span class="filter-count">12</span></label></li>
+          </ul>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group__title">Цена</h4>
+          <div class="price-range">
+            <input type="number" name="price_from" placeholder="от" value="100" />
+            <span class="price-range__sep">—</span>
+            <input type="number" name="price_to" placeholder="до" value="5000" />
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group__title">Страна</h4>
+          <ul class="filter-list">
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="india" checked /> Индия <span class="filter-count">45</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="srilanka" checked /> Шри-Ланка <span class="filter-count">23</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="morocco" /> Марокко <span class="filter-count">18</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="thailand" /> Таиланд <span class="filter-count">15</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="country" value="iran" /> Иран <span class="filter-count">8</span></label></li>
+          </ul>
+        </div>
+
+        <div class="filter-group">
+          <h4 class="filter-group__title">Особенности</h4>
+          <ul class="filter-list">
+            <li><label class="filter-checkbox"><input type="checkbox" name="feature" value="organic" /> Органик <span class="filter-count">32</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="feature" value="gluten-free" /> Без глютена <span class="filter-count">89</span></label></li>
+            <li><label class="filter-checkbox"><input type="checkbox" name="feature" value="vegan" /> Веган <span class="filter-count">105</span></label></li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Products Area -->
+      <div>
+        <!-- Toolbar -->
+        <div class="catalog-toolbar">
+          <button class="filter-toggle" id="filterToggle">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Фильтрация
+          </button>
+          <span class="catalog-toolbar__count">Показано <strong>12</strong> из 169 товаров</span>
+          <div class="catalog-sort">
+            <label for="sortSelect">Сортировка:</label>
+            <select id="sortSelect" name="sort">
+              <option value="popular">По популярности</option>
+              <option value="price-asc">Цена: по возрастанию</option>
+              <option value="price-desc">Цена: по убыванию</option>
+              <option value="new">Сначала новые</option>
+              <option value="rating">По рейтингу</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="catalog-grid" id="catalogGrid">
+          <!-- Product 1 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/saf2.jpg" alt="Шафран иранский" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--new">Новинка</span>
+                <span class="badge badge--hit">Хит</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="saffron-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="saffron-1" data-name="Шафран иранский премиум, 1 г" data-price="2490" data-image="img/saf2.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Цельные специи · Иран</div>
+              <h3 class="product-card__title">Шафран иранский премиум, 1 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">2 490 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.9</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/kar.jpg" alt="Кардамон" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--organic">Органик</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="cardamom-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="cardamom-1" data-name="Кардамон зелёный, 50 г" data-price="890" data-image="img/kar.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Цельные специи · Индия</div>
+              <h3 class="product-card__title">Кардамон зелёный, 50 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">890 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.8</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/masala2.jpg" alt="Масала" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--sale">-20%</span>
+                <span class="badge badge--hit">Хит</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="masala-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="masala-1" data-name="Гарам масала, 100 г" data-price="450" data-image="img/masala2.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Смеси · Индия</div>
+              <h3 class="product-card__title">Гарам масала, 100 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">450 ₽</span>
+                  <span class="price--old">560 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.7</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 4 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/kurku.jpg" alt="Куркума" class="product-card__img" />
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="turmeric-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="turmeric-1" data-name="Куркума аллеппо, 100 г" data-price="320" data-image="img/kurku.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Молотые специи · Индия</div>
+              <h3 class="product-card__title">Куркума аллеппо, 100 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">320 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.9</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 5 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/smesi3.jpg" alt="Смесь пять специй" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--new">Новинка</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="five-spice-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="five-spice-1" data-name="Смесь пять специй, 50 г" data-price="380" data-image="img/smesi3.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Смеси · Китай</div>
+              <h3 class="product-card__title">Смесь пять специй, 50 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">380 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★☆ 4.5</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 6 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/16.jpg" alt="Чёрный перец" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--organic">Органик</span>
+                <span class="badge badge--hit">Хит</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="pepper-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="pepper-1" data-name="Чёрный перец горошком, 100 г" data-price="520" data-image="img/16.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Цельные специи · Шри-Ланка</div>
+              <h3 class="product-card__title">Чёрный перец горошком, 100 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">520 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.9</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 7 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/shaf1.jpg" alt="Шафран" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--sale">-15%</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="saffron-2" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="saffron-2" data-name="Шафран испанский, 0.5 г" data-price="1890" data-image="img/shaf1.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Цельные специи · Испания</div>
+              <h3 class="product-card__title">Шафран испанский, 0.5 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">1 890 ₽</span>
+                  <span class="price--old">2 220 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.8</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 8 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/smesi2.jpg" alt="Смесь карри" class="product-card__img" />
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="curry-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="curry-1" data-name="Смесь карри мадрас, 100 г" data-price="410" data-image="img/smesi2.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Смеси · Индия</div>
+              <h3 class="product-card__title">Смесь карри мадрас, 100 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">410 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★☆ 4.6</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 9 -->
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/masala2.jpg" alt="Тандури масала" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--new">Новинка</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="tandoori-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="tandoori-1" data-name="Тандури масала, 80 г" data-price="390" data-image="img/masala2.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Смеси · Индия</div>
+              <h3 class="product-card__title">Тандури масала, 80 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">390 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="pagination__btn" disabled>←</button>
+          <button class="pagination__btn active">1</button>
+          <button class="pagination__btn">2</button>
+          <button class="pagination__btn">3</button>
+          <span style="color: var(--color-text-light); padding: 0 0.5rem;">...</span>
+          <button class="pagination__btn">15</button>
+          <button class="pagination__btn">→</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="contacts">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">Аромат Востока</a>
+          <p class="footer__text">Прямые поставки натуральных специй из Индии, Шри-Ланки, Марокко и Таиланда с 2015 года.</p>
+          <div class="footer__socials">
+            <a href="#" class="social-link" aria-label="VK">VK</a>
+            <a href="#" class="social-link" aria-label="Telegram">TG</a>
+            <a href="#" class="social-link" aria-label="Instagram">IG</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Каталог</h4>
+          <ul class="footer__links">
+            <li><a href="catalog.html">Цельные специи</a></li>
+            <li><a href="catalog.html">Молотые специи</a></li>
+            <li><a href="catalog.html">Смеси и масалы</a></li>
+            <li><a href="catalog.html">Пряные чаи</a></li>
+            <li><a href="catalog.html">Аксессуары</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Клиентам</h4>
+          <ul class="footer__links">
+            <li><a href="#">Доставка и оплата</a></li>
+            <li><a href="#">Возврат товара</a></li>
+            <li><a href="#">Программа лояльности</a></li>
+            <li><a href="index.html#testimonials">Отзывы</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Контакты</h4>
+          <ul class="footer__links">
+            <li><a href="tel:88001234567">8 (800) 123-45-67</a></li>
+            <li><a href="mailto:hello@aromat-vostoka.ru">hello@aromat-vostoka.ru</a></li>
+            <li>Москва, ул. Специй, 15</li>
+            <li>Пн–Сб: 10:00–20:00</li>
+            <li><a href="#" data-modal="callback">Заказать звонок</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2026 Аромат Востока. Все права защищены.</p>
+        <p>Политика конфиденциальности · Условия использования</p>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

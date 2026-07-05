@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Корзина — Аромат Востока</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+      <div class="search-overlay__inner">
+        <button class="search-overlay__close" id="searchClose">✕</button>
+        <input
+          type="text"
+          class="search-overlay__input"
+          id="searchInput"
+          placeholder="Поиск по товарам... (например, шафран, кардамон)"
+          autocomplete="off"
+        />
+        <div class="search-overlay__results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- Callback Modal -->
+    <div class="modal-overlay" id="callbackModal">
+      <div class="modal">
+        <button class="modal__close">✕</button>
+        <h3 class="modal__title">Заказать звонок</h3>
+        <p class="modal__text">Оставьте контакты — мы перезвоним в течение 15 минут</p>
+        <form id="callback-form" action="/api/callback" method="POST">
+          <div class="form-group">
+            <label for="callback-name">Ваше имя *</label>
+            <input type="text" id="callback-name" name="name" placeholder="Иван Иванов" required />
+            <span class="form-error">Введите имя</span>
+          </div>
+          <div class="form-group">
+            <label for="callback-phone">Телефон *</label>
+            <input type="tel" id="callback-phone" name="phone" placeholder="+7 (999) 123-45-67" required />
+            <span class="form-error">Введите телефон</span>
+          </div>
+          <div class="form-group">
+            <label for="callback-message">Сообщение</label>
+            <textarea id="callback-message" name="message" placeholder="Что вас интересует?"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block form__submit">Отправить</button>
+          <p class="form__note">Нажимая кнопку, вы соглашаетесь с <a href="#">политикой конфиденциальности</a></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header__inner">
+        <a href="index.html" class="logo">
+          <div class="logo__icon">☥</div>
+          Аромат Востока
+        </a>
+
+        <nav class="nav">
+          <a href="catalog.html" class="nav__link">Каталог</a>
+          <a href="index.html#products" class="nav__link">Новинки</a>
+          <a href="index.html#about" class="nav__link">О нас</a>
+          <a href="index.html#testimonials" class="nav__link">Отзывы</a>
+          <a href="index.html#contacts" class="nav__link">Контакты</a>
+        </nav>
+
+        <div class="header__actions">
+          <button class="icon-btn" id="searchBtn" aria-label="Поиск">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" aria-label="Избранное">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+            </svg>
+          </button>
+          <a href="cart.html" class="icon-btn" aria-label="Корзина">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"></circle>
+              <circle cx="19" cy="21" r="1"></circle>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+            </svg>
+            <span class="icon-btn__badge cart-badge">3</span>
+          </a>
+          <button class="mobile-menu-btn" id="menuBtn" aria-label="Меню">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="mobile-menu__close" id="menuClose">✕</button>
+      <nav class="mobile-menu__nav">
+        <a href="catalog.html">Каталог</a>
+        <a href="index.html#products">Новинки</a>
+        <a href="index.html#about">О нас</a>
+        <a href="index.html#testimonials">Отзывы</a>
+        <a href="index.html#contacts">Контакты</a>
+      </nav>
+    </div>
+
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs" style="margin-top: 72px;">
+      <a href="index.html">Главная</a>
+      <span class="breadcrumbs__sep">/</span>
+      <a href="catalog.html">Каталог</a>
+      <span class="breadcrumbs__sep">/</span>
+      <span class="breadcrumbs__current">Корзина</span>
+    </nav>
+
+    <!-- Cart Hero -->
+    <section class="cart-hero">
+      <h1 class="cart-hero__title">Ваша корзина</h1>
+      <p class="cart-hero__text">Проверьте товары и оформите заказ</p>
+    </section>
+
+    <!-- Cart Main -->
+    <div class="cart-main">
+      <!-- Left Column: Items + Order Form -->
+      <div>
+        <!-- Cart Items -->
+        <div class="cart-items" id="cartItems">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div class="cart-empty" id="cartEmpty" style="display: none;">
+          <div class="cart-empty__icon">🛒</div>
+          <h2 class="cart-empty__title">Корзина пуста</h2>
+          <p class="cart-empty__text">Добавьте товары из каталога, чтобы оформить заказ</p>
+          <a href="catalog.html" class="btn btn--primary">Перейти в каталог</a>
+        </div>
+
+        <!-- Order Form — готова к подключению бэкенда -->
+        <form id="order-form" action="/api/order" method="POST" class="order-form">
+          <h3 class="order-form__title">Оформление заказа</h3>
+          <div class="order-form__grid">
+            <div class="form-group">
+              <label for="order-name">Имя *</label>
+              <input type="text" id="order-name" name="name" placeholder="Иван Иванов" required />
+              <span class="form-error">Введите имя</span>
+            </div>
+            <div class="form-group">
+              <label for="order-email">Email *</label>
+              <input type="email" id="order-email" name="email" placeholder="ivan@example.com" required />
+              <span class="form-error">Введите корректный email</span>
+            </div>
+            <div class="form-group">
+              <label for="order-phone">Телефон *</label>
+              <input type="tel" id="order-phone" name="phone" placeholder="+7 (999) 123-45-67" required />
+              <span class="form-error">Введите телефон</span>
+            </div>
+            <div class="form-group">
+              <label for="order-city">Город</label>
+              <input type="text" id="order-city" name="city" placeholder="Москва" />
+            </div>
+            <div class="form-group">
+              <label for="order-address">Адрес доставки</label>
+              <input type="text" id="order-address" name="address" placeholder="ул. Примерная, 15, кв. 42" />
+            </div>
+            <div class="form-group">
+              <label for="order-comment">Комментарий к заказу</label>
+              <textarea id="order-comment" name="comment" placeholder="Удобное время доставки, подъезд и т.д."></textarea>
+            </div>
+          </div>
+          <!-- Скрытое поле с данными корзины — передаётся на сервер -->
+          <input type="hidden" name="cart_data" id="cart-data" />
+          <button type="submit" class="btn btn--primary btn--lg btn--block" style="margin-top: 1.5rem;">
+            Подтвердить заказ
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </button>
+          <p class="form__note" style="margin-top: 1rem;">
+            Нажимая кнопку, вы соглашаетесь с <a href="#">политикой конфиденциальности</a> и <a href="#">условиями доставки</a>
+          </p>
+        </form>
+      </div>
+
+      <!-- Right Column: Summary -->
+      <div class="cart-summary" id="cartSummary">
+        <h3 class="cart-summary__title">Итого</h3>
+
+        <div class="cart-summary__row">
+          <span>Товары</span>
+          <span id="cartSubtotal">3 700 ₽</span>
+        </div>
+        <div class="cart-summary__row">
+          <span>Скидка</span>
+          <span id="cartDiscount">0 ₽</span>
+        </div>
+        <div class="cart-summary__row">
+          <span>Доставка</span>
+          <span id="cartDelivery">350 ₽</span>
+        </div>
+        <div class="cart-summary__row cart-summary__row--total">
+          <span>К оплате</span>
+          <span id="cartTotal">4 050 ₽</span>
+        </div>
+
+        <form class="cart-summary__promo" id="promoForm">
+          <input type="text" name="promo" placeholder="Промокод (например, SPICE10)" />
+          <button type="submit">Применить</button>
+        </form>
+
+        <button class="btn btn--primary btn--lg btn--block cart-summary__btn" id="checkoutBtn">
+          Оформить заказ
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </button>
+
+        <p class="cart-summary__note">
+          Бесплатная доставка при заказе от 3 000 ₽. <a href="#">Условия доставки</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="contacts">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">Аромат Востока</a>
+          <p class="footer__text">Прямые поставки натуральных специй из Индии, Шри-Ланки, Марокко и Таиланда с 2015 года.</p>
+          <div class="footer__socials">
+            <a href="#" class="social-link" aria-label="VK">VK</a>
+            <a href="#" class="social-link" aria-label="Telegram">TG</a>
+            <a href="#" class="social-link" aria-label="Instagram">IG</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Каталог</h4>
+          <ul class="footer__links">
+            <li><a href="catalog.html">Цельные специи</a></li>
+            <li><a href="catalog.html">Молотые специи</a></li>
+            <li><a href="catalog.html">Смеси и масалы</a></li>
+            <li><a href="catalog.html">Пряные чаи</a></li>
+            <li><a href="catalog.html">Аксессуары</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Клиентам</h4>
+          <ul class="footer__links">
+            <li><a href="#">Доставка и оплата</a></li>
+            <li><a href="#">Возврат товара</a></li>
+            <li><a href="#">Программа лояльности</a></li>
+            <li><a href="index.html#testimonials">Отзывы</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Контакты</h4>
+          <ul class="footer__links">
+            <li><a href="tel:88001234567">8 (800) 123-45-67</a></li>
+            <li><a href="mailto:hello@aromat-vostoka.ru">hello@aromat-vostoka.ru</a></li>
+            <li>Москва, ул. Специй, 15</li>
+            <li>Пн–Сб: 10:00–20:00</li>
+            <li><a href="#" data-modal="callback">Заказать звонок</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2026 Аромат Востока. Все права защищены.</p>
+        <p>Политика конфиденциальности · Условия использования</p>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

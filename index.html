@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Аромат Востока — Пряности и специи премиум-класса</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Search Overlay -->
+    <div class="search-overlay" id="searchOverlay">
+      <div class="search-overlay__inner">
+        <button class="search-overlay__close" id="searchClose">✕</button>
+        <input
+          type="text"
+          class="search-overlay__input"
+          id="searchInput"
+          placeholder="Поиск по товарам... (например, шафран, кардамон)"
+          autocomplete="off"
+        />
+        <div class="search-overlay__results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <!-- Callback Modal -->
+    <div class="modal-overlay" id="callbackModal">
+      <div class="modal">
+        <button class="modal__close">✕</button>
+        <h3 class="modal__title">Заказать звонок</h3>
+        <p class="modal__text">Оставьте контакты — мы перезвоним в течение 15 минут</p>
+        <form id="callback-form" action="/api/callback" method="POST">
+          <div class="form-group">
+            <label for="callback-name">Ваше имя *</label>
+            <input type="text" id="callback-name" name="name" placeholder="Иван Иванов" required />
+            <span class="form-error">Введите имя</span>
+          </div>
+          <div class="form-group">
+            <label for="callback-phone">Телефон *</label>
+            <input type="tel" id="callback-phone" name="phone" placeholder="+7 (999) 123-45-67" required />
+            <span class="form-error">Введите телефон</span>
+          </div>
+          <div class="form-group">
+            <label for="callback-message">Сообщение</label>
+            <textarea id="callback-message" name="message" placeholder="Что вас интересует?"></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block form__submit">Отправить</button>
+          <p class="form__note">Нажимая кнопку, вы соглашаетесь с <a href="#">политикой конфиденциальности</a></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+      <div class="header__inner">
+        <a href="index.html" class="logo">
+          <div class="logo__icon">☥</div>
+          Аромат Востока
+        </a>
+
+        <nav class="nav">
+          <a href="catalog.html" class="nav__link">Каталог</a>
+          <a href="index.html#products" class="nav__link">Новинки</a>
+          <a href="index.html#about" class="nav__link">О нас</a>
+          <a href="index.html#testimonials" class="nav__link">Отзывы</a>
+          <a href="index.html#contacts" class="nav__link">Контакты</a>
+        </nav>
+
+        <div class="header__actions">
+          <button class="icon-btn" id="searchBtn" aria-label="Поиск">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+          </button>
+          <button class="icon-btn" aria-label="Избранное">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+            </svg>
+          </button>
+          <a href="cart.html" class="icon-btn" aria-label="Корзина">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"></circle>
+              <circle cx="19" cy="21" r="1"></circle>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+            </svg>
+            <span class="icon-btn__badge cart-badge">3</span>
+          </a>
+          <button class="mobile-menu-btn" id="menuBtn" aria-label="Меню">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+      <button class="mobile-menu__close" id="menuClose">✕</button>
+      <nav class="mobile-menu__nav">
+        <a href="catalog.html">Каталог</a>
+        <a href="index.html#products">Новинки</a>
+        <a href="index.html#about">О нас</a>
+        <a href="index.html#testimonials">Отзывы</a>
+        <a href="index.html#contacts">Контакты</a>
+      </nav>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero__bg-pattern"></div>
+      <div class="hero__inner">
+        <div class="hero__content">
+          <div class="hero__subtitle">Премиум пряности с 2015 года</div>
+          <h1 class="hero__title">Откройте для себя <span>настоящий</span> вкус Востока</h1>
+          <p class="hero__text">
+            Прямые поставки специй из Индии, Шри-Ланки, Марокко и Таиланда.
+            Каждая специя проходит строгий контроль качества и доставляется свежей, сохраняя все ароматические свойства.
+          </p>
+          <div class="hero__buttons">
+            <a href="catalog.html" class="btn btn--primary">
+              Перейти в каталог
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </a>
+            <a href="index.html#about" class="btn btn--outline">Наша история</a>
+          </div>
+        </div>
+        <div class="hero__image">
+          <img src="img/smesi3.jpg" alt="Восточные пряности" class="hero__image-main" />
+
+          <div class="hero__floating-card hero__floating-card--1">
+            <img src="img/shaf1.jpg" alt="Шафран" class="floating-card__img" />
+            <div class="floating-card__title">Шафран премиум</div>
+            <div class="floating-card__price">от 2 490 ₽</div>
+          </div>
+
+          <div class="hero__floating-card hero__floating-card--2">
+            <img src="img/kar.jpg" alt="Кардамон" class="floating-card__img" />
+            <div class="floating-card__title">Кардамон зелёный</div>
+            <div class="floating-card__price">от 890 ₽</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories" id="categories">
+      <div class="section-header scroll-reveal">
+        <div class="section-header__subtitle">Категории</div>
+        <h2 class="section-header__title">Исследуйте мир специй</h2>
+        <p class="section-header__text">
+          От цельных специй до готовых смесей — найдите идеальный ингредиент для ваших блюд
+        </p>
+      </div>
+
+      <div class="categories__grid">
+        <a href="catalog.html" class="category-card scroll-reveal">
+          <img src="img/grinder-wooden-spoon-with-spices.jpg" alt="Цельные специи" class="category-card__img" />
+          <div class="category-card__overlay">
+            <h3 class="category-card__title">Цельные специи</h3>
+            <p class="category-card__count">48 товаров</p>
+          </div>
+          <div class="category-card__arrow">→</div>
+        </a>
+
+        <a href="catalog.html" class="category-card scroll-reveal">
+          <img src="img/smesi2.jpg" alt="Молотые специи" class="category-card__img" />
+          <div class="category-card__overlay">
+            <h3 class="category-card__title">Молотые специи</h3>
+            <p class="category-card__count">62 товара</p>
+          </div>
+          <div class="category-card__arrow">→</div>
+        </a>
+
+        <a href="catalog.html" class="category-card scroll-reveal">
+          <img src="img/masala2.jpg" alt="Смеси и масалы" class="category-card__img" />
+          <div class="category-card__overlay">
+            <h3 class="category-card__title">Смеси и масалы</h3>
+            <p class="category-card__count">35 товаров</p>
+          </div>
+          <div class="category-card__arrow">→</div>
+        </a>
+
+        <a href="catalog.html" class="category-card scroll-reveal">
+          <img src="img/tea.jpg" alt="Пряные чаи" class="category-card__img" />
+          <div class="category-card__overlay">
+            <h3 class="category-card__title">Пряные чаи</h3>
+            <p class="category-card__count">24 товара</p>
+          </div>
+          <div class="category-card__arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products" id="products">
+      <div class="products__inner">
+        <div class="section-header scroll-reveal">
+          <div class="section-header__subtitle">Популярное</div>
+          <h2 class="section-header__title">Хиты продаж</h2>
+          <p class="section-header__text">
+            Специи, которые выбирают наши клиенты чаще всего
+          </p>
+        </div>
+
+        <div class="products__grid">
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/saf2.jpg" alt="Шафран иранский" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--new">Новинка</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="saffron-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="saffron-1" data-name="Шафран иранский премиум, 1 г" data-price="2490" data-image="img/saf2.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Цельные специи</div>
+              <h3 class="product-card__title">Шафран иранский премиум, 1 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">2 490 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.9</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/kar.jpg" alt="Кардамон" class="product-card__img" />
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="cardamom-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="cardamom-1" data-name="Кардамон зелёный, 50 г" data-price="890" data-image="img/kar.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Цельные специи</div>
+              <h3 class="product-card__title">Кардамон зелёный, 50 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">890 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.8</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/masala2.jpg" alt="Масала" class="product-card__img" />
+              <div class="product-card__badges">
+                <span class="badge badge--sale">-20%</span>
+              </div>
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="masala-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="masala-1" data-name="Гарам масала, 100 г" data-price="450" data-image="img/masala2.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Смеси</div>
+              <h3 class="product-card__title">Гарам масала, 100 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">450 ₽</span>
+                  <span class="price--old">560 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.7</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="product-card scroll-reveal">
+            <div class="product-card__image-wrap">
+              <img src="img/kurku.jpg" alt="Куркума" class="product-card__img" />
+              <div class="product-card__actions">
+                <button class="action-btn" data-action="wishlist" data-id="turmeric-1" aria-label="В избранное">♡</button>
+                <button class="action-btn" data-action="cart" data-id="turmeric-1" data-name="Куркума аллеппо, 100 г" data-price="320" data-image="img/kurku.jpg" aria-label="В корзину">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div class="product-card__info">
+              <div class="product-card__category">Молотые специи</div>
+              <h3 class="product-card__title">Куркума аллеппо, 100 г</h3>
+              <div class="product-card__meta">
+                <div class="product-card__price">
+                  <span class="price--current">320 ₽</span>
+                </div>
+                <div class="product-card__rating">★★★★★ 4.9</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+      <div class="section-header scroll-reveal">
+        <div class="section-header__subtitle">Почему мы</div>
+        <h2 class="section-header__title">Преимущества покупки у нас</h2>
+      </div>
+
+      <div class="features__grid">
+        <div class="feature scroll-reveal">
+          <div class="feature__icon">🌿</div>
+          <h3 class="feature__title">100% натурально</h3>
+          <p class="feature__text">Без добавок, красителей и консервантов. Только чистые специи высшего сорта</p>
+        </div>
+
+        <div class="feature scroll-reveal">
+          <div class="feature__icon">🚚</div>
+          <h3 class="feature__title">Быстрая доставка</h3>
+          <p class="feature__text">Доставка по всей России от 1 дня. Бесплатно при заказе от 3000 ₽</p>
+        </div>
+
+        <div class="feature scroll-reveal">
+          <div class="feature__icon">✓</div>
+          <h3 class="feature__title">Гарантия свежести</h3>
+          <p class="feature__text">Прямые поставки каждые 2 недели. Специи всегда свежие и ароматные</p>
+        </div>
+
+        <div class="feature scroll-reveal">
+          <div class="feature__icon">↩</div>
+          <h3 class="feature__title">Лёгкий возврат</h3>
+          <p class="feature__text">Не понравилось? Вернём деньги в течение 14 дней без лишних вопросов</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+      <div class="about__inner">
+        <div class="about__images scroll-reveal">
+          <img src="img/16.jpg" alt="О нашем магазине" class="about__img-main" />
+          <img src="img/side-view-various-spices-wooden-spoon-with-black-seeds-rice-breads-tied-with-rope-wooden-board-black.jpg" alt="Пряности" class="about__img-secondary" />
+        </div>
+
+        <div class="about__content scroll-reveal">
+          <div class="about__subtitle">Наша история</div>
+          <h2 class="about__title">Путешествие за вкусом начинается здесь</h2>
+          <p class="about__text">
+            Мы лично посещаем рынки Мумбаи, Дубая и Стамбула, чтобы отобрать лучшие специи для вас. С 2015 года «Аромат Востока» объединяет тысячи любителей кулинарии, которые ценят подлинный вкус и качество.
+          </p>
+          <p class="about__text">
+            Каждая специя проходит лабораторный контроль на отсутствие пестицидов и тяжёлых металлов. Мы работаем только с проверенными фермерскими хозяйствами, которые выращивают специи по традиционным технологиям.
+          </p>
+          <a href="#" class="btn btn--outline" style="border-color: var(--color-accent); color: var(--color-accent);">Подробнее о нас</a>
+
+          <div class="about__stats">
+            <div class="stat">
+              <div class="stat__number">9+</div>
+              <div class="stat__label">Лет на рынке</div>
+            </div>
+            <div class="stat">
+              <div class="stat__number">15K+</div>
+              <div class="stat__label">Довольных клиентов</div>
+            </div>
+            <div class="stat">
+              <div class="stat__number">200+</div>
+              <div class="stat__label">Видов специй</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials" id="testimonials">
+      <div class="section-header scroll-reveal">
+        <div class="section-header__subtitle">Отзывы</div>
+        <h2 class="section-header__title">Что говорят наши клиенты</h2>
+      </div>
+
+      <div class="testimonials__grid">
+        <div class="testimonial scroll-reveal">
+          <div class="testimonial__quote">"</div>
+          <p class="testimonial__text">Шафран просто невероятный! Аромат настолько насыщенный, что хватает совсем чуть-чуть для плова. Уже третий год заказываю только здесь.</p>
+          <div class="testimonial__author">
+            <img src="img/otziv1.jpg" alt="Анна" class="testimonial__avatar" />
+            <div>
+              <div class="testimonial__name">Анна Ковалёва</div>
+              <div class="testimonial__role">Домохозяйка, Москва</div>
+              <div class="testimonial__rating">★★★★★</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial scroll-reveal">
+          <div class="testimonial__quote">"</div>
+          <p class="testimonial__text">Как шеф-повар, я очень требователен к ингредиентам. «Аромат Востока» — единственный магазин, где я нашёл настоящую куркуму аллеппо.</p>
+          <div class="testimonial__author">
+            <img src="img/otziv povar.jpg" alt="Дмитрий" class="testimonial__avatar" />
+            <div>
+              <div class="testimonial__name">Дмитрий Соколов</div>
+              <div class="testimonial__role">Шеф-повар, СПб</div>
+              <div class="testimonial__rating">★★★★★</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial scroll-reveal">
+          <div class="testimonial__quote">"</div>
+          <p class="testimonial__text">Заказала набор для карри — всё свежее, упаковка отличная. Доставили на следующий день. Теперь советую всем подругам!</p>
+          <div class="testimonial__author">
+            <img src="img/onziv2.jpg" alt="Мария" class="testimonial__avatar" />
+            <div>
+              <div class="testimonial__name">Мария Петрова</div>
+              <div class="testimonial__role">Блогер, Казань</div>
+              <div class="testimonial__rating">★★★★★</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+      <div class="newsletter__inner">
+        <h2 class="newsletter__title">Получайте секреты восточной кухни</h2>
+        <p class="newsletter__text">
+          Подпишитесь на рассылку и получите скидку 10% на первый заказ, а также рецепты с лучшими специями каждую неделю.
+        </p>
+        <form id="newsletter-form" action="/api/subscribe" method="POST" class="newsletter__form">
+          <input type="email" name="email" class="newsletter__input" placeholder="Ваш email" required />
+          <button type="submit" class="newsletter__btn">Подписаться</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contacts">
+      <div class="footer__inner">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">Аромат Востока</a>
+          <p class="footer__text">Прямые поставки натуральных специй из Индии, Шри-Ланки, Марокко и Таиланда с 2015 года.</p>
+          <div class="footer__socials">
+            <a href="#" class="social-link" aria-label="VK">VK</a>
+            <a href="#" class="social-link" aria-label="Telegram">TG</a>
+            <a href="#" class="social-link" aria-label="Instagram">IG</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Каталог</h4>
+          <ul class="footer__links">
+            <li><a href="catalog.html">Цельные специи</a></li>
+            <li><a href="catalog.html">Молотые специи</a></li>
+            <li><a href="catalog.html">Смеси и масалы</a></li>
+            <li><a href="catalog.html">Пряные чаи</a></li>
+            <li><a href="catalog.html">Аксессуары</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Клиентам</h4>
+          <ul class="footer__links">
+            <li><a href="#">Доставка и оплата</a></li>
+            <li><a href="#">Возврат товара</a></li>
+            <li><a href="#">Программа лояльности</a></li>
+            <li><a href="index.html#testimonials">Отзывы</a></li>
+            <li><a href="#">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer__title">Контакты</h4>
+          <ul class="footer__links">
+            <li><a href="tel:88001234567">8 (800) 123-45-67</a></li>
+            <li><a href="mailto:hello@aromat-vostoka.ru">hello@aromat-vostoka.ru</a></li>
+            <li>Москва, ул. Специй, 15</li>
+            <li>Пн–Сб: 10:00–20:00</li>
+            <li><a href="#" data-modal="callback">Заказать звонок</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2026 Аромат Востока. Все права защищены.</p>
+        <p>Политика конфиденциальности · Условия использования</p>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>
